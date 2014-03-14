@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+
+    <script src="../libs/jquery-1.10.1.js"></script>
+    <script src="../libs/jquery.xdomainajax.js"></script>
+    <script src="../libs/d3.v3.min.js"></script>
+    <script src="../libs/FileSaver.js"></script>
+</head>
+<body>
+
+<script>
+    var convertToInt;
+
+    $.ajax({
+        url: "http://en.wikipedia.org/wiki/World_population_estimates",
+        type: 'GET',
+        cache: false,
+        success: function(data) {
+            var root,allData, body, table;
+            root = $("<div></div>")
+            root.html(data.responseText)
+
+            var content = root.find("#content"); // find all the nodes that have ID "content"
+            var h2s = content.find(".mw-headline"); // search in all "content" nodes for nodes of class ".mw-headline"
+             var table_data = content.find("table"); // search in all "content" nodes for nodes of class ".mw-headline"
+             var tr = table_data.find("tr");
+/*
+
+            $.each(h2s, function(index, value) {
+                console.log($(value).text()); // print text
+            });
+			
+             $.each(table_data, function(index, value) {
+                console.log($(value).text()); // print text
+            });
+*/
+var myArray = [];
+
+//UnitedStatesCensusBureau,PopulationReferenceBureau,UnitedNations,HYDE,Maddison
+
+
+myArray.push("Year,UnitedStatesCensusBureau,PopulationReferenceBureau,UnitedNations,HYDE,Maddison\n")
+//console.log("Testing")
+              $.each(tr, function(i, el) {
+
+                if(i != 0){
+                var year = $(this).find("td:first").text(); 
+                year = year.replace(/^\s+|\s+$/g, '');
+                var UnitedStatesCensusBureau = $(this).find("td").eq(2).text(); 
+                var PopulationReferenceBureau = $(this).find("td").eq(3).text(); 
+                var UnitedNations = $(this).find("td").eq(4).text(); 
+                var HYDE = $(this).find("td").eq(5).text();  
+                var Maddison = $(this).find("td").eq(6).text(); 
+        if(year >= 0 && !isNaN(year)){
+     
+        //console.log("column1:", column1)
+        var a = year.concat(",")
+                    .concat(convertToInt(UnitedStatesCensusBureau))
+                    .concat(",")
+                    .concat(convertToInt(PopulationReferenceBureau))
+                    .concat(",")
+                    .concat(convertToInt(UnitedNations))
+                    .concat(",")
+                    .concat(convertToInt(HYDE))
+                    .concat(",")
+                    .concat(convertToInt(Maddison))
+                    .concat("\n")
+        //console.log("a:", a)
+        myArray.push(a);
+    }
+}
+        //$.ajax (do your AJAX call here using values of query and text
+    });
+
+            //  console.log(myArray)
+
+			saveToFile(myArray,"test.txt")
+        },
+        error: function() {
+            return console.log("error");
+        }
+    });
+
+    convertToInt = function(s) {
+      if (s)
+        return parseInt(s.replace(/,/g, ""), 10);
+      return ""
+    };
+	
+    /* takes an array of strings
+       and writes them line by line into a file given by filename
+     */
+    var saveToFile = function(arrayOfLines, fileName) {
+       /* adds linebreaks at the end*/
+       var blob, blobText;
+       blobText = arrayOfLines.map(function(d) {
+         if (d.endsWith("\n")) {
+           return d;
+         } else {
+           return d + "\n";
+         }
+       });
+       blob = new Blob(blobText, {
+         type: "text/plain;charset=utf-8"
+       });
+       return saveAs(blob, fileName);
+     };
+
+     String.prototype.endsWith = function(suffix) {
+       return this.indexOf(suffix, this.length - suffix.length) !== -1;
+     };
+	
+
+
+
+</script>
+
+
+</body>
+</html>
