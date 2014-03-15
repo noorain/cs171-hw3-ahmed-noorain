@@ -3,7 +3,7 @@
 
 1. Look at the data given in the Wiki table. Describe the data types. What is different from the datasets you've used before? 
 
-The data includes Year,UnitedStatesCensusBureau,PopulationReferenceBureau,UnitedNations,HYDE,Maddison
+The data includes Year,UnitedStatesCensusBureau,PopulationReferenceBureau,UnitedNations,HYDE,Maddison. The year should be pased as Date Object with 1990 etc comverted to time scale.
 
 The data type for all columns can be treated as INT. Differences are we are scraping the data, there are nulls in the data. There is negatives in the data.
 
